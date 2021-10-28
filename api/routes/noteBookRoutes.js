@@ -13,7 +13,12 @@ module.exports = function(app) {
 		.post(userHandlers.loginRequired, noteBookHandlers.createNoteBook);
 
 
-    // This route return the list of notes books created by the user doing the request
+    /* This route return the list of notes books created by the user doing the request
+    
+        this url can take two quries parameters 
+        1. search: This param is of thing string
+        2. sort:  This param an be of type asc or desc depend of if we want to order from older to recent or from recent to older
+    */
 	app.route('/notesbooks')
 		.get(userHandlers.loginRequired, noteBookHandlers.getNotesbooks);
 
@@ -37,7 +42,11 @@ module.exports = function(app) {
         .post(userHandlers.loginRequired, noteHandlers.createNote);
 
 
-    // This route return the list of notes created by the user doing the request
+    /* This route return the list of notes created by the user doing the request
+        this url can take two quries parameters 
+        1. search: This param is of thing string
+        2. sort:  This param an be of type asc or desc depend of if we want to order from older to recent or from recent to older
+    */
     app.route('/notebook/:notebook_id/notes')
         .get(userHandlers.loginRequired, noteHandlers.getNotes);
  

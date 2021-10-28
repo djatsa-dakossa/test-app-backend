@@ -61,11 +61,11 @@ exports.getNotesbooks = function(req, res) {
     const id = req.body.id
     let searchParams = new URL("http://localhost:3000" + req.url).searchParams
     let search = searchParams.get('search')
-    // console.log("search=====>", searchParams.get('search'))
+    let sort = searchParams.get('sort')
 
     NoteBook.find({
             created_by: req.user._id,
-        }, function(err, resp) {
+        }, {sort: {created: sort === "asc" ? 1 : -1}}, function(err, resp) {
             if (err) {
                 console.log(err.message)
 

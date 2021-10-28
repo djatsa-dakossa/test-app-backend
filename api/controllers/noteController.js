@@ -100,12 +100,13 @@ exports.getNotes = function(req, res) {
     const notebook_id = req.params.notebook_id
     let searchParams = new URL("http://localhost:3000" + req.url).searchParams
     let search = searchParams.get('search')
+    let sort = searchParams.get('sort')
     // console.log("search=====>", searchParams.get('search'))
 
     Note.find({
             created_by: req.user._id,
             notebook_id: notebook_id
-        }, function(err, resp) {
+        }, null, {sort: {created: sort === "asc" ? 1 : -1}}, function(err, resp) {
             if (err) {
                 console.log(err.message)
 
