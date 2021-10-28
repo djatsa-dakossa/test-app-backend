@@ -1,5 +1,5 @@
 'use strict';
-
+let { URL } = require('url');
 var mongoose = require('mongoose'),
   jwt = require('jsonwebtoken'),
   bcrypt = require('bcrypt'),
@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 
 exports.register = function(req, res) {
   var newUser = new User(req.body);
+    //   console.log('Url ===>', new URL("http://localhost:3000" + req.url))
   
   newUser.hash_password = bcrypt.hashSync(req.body.password, 10);
   newUser.save(function(err, user) {

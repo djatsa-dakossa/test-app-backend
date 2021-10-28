@@ -5,6 +5,7 @@ var express = require('express'),
   port = process.env.PORT || 3000,
   
   User = require('./api/models/userModel'),
+  NoteBookSchema = require('./api/models/notesBookModels'),
   bodyParser = require('body-parser'),
   jsonwebtoken = require("jsonwebtoken");
 
@@ -44,7 +45,7 @@ app.use(function(req, res, next) {
     next();
   }
 });
-var routes = require('./api/routes/userRoutes');
+var routes = require('./api/routes/appRoutes');
 routes(app);
 
 app.use(function(req, res) {
