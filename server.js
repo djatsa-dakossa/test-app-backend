@@ -2,7 +2,7 @@
 
 var express = require('express'),
   app = express(),
-  port = process.env.PORT || 3000,
+  port = process.env.PORT || 3003,
   
   User = require('./api/models/userModel'),
   NoteBookSchema = require('./api/models/notesBookModels'),
@@ -14,7 +14,7 @@ const mongoose = require('mongoose');
 const option = {
     socketTimeoutMS: 30000,
     keepAlive: true,
-    reconnectTries: 30000
+    reconnectTries: 30000 
 };
 
 
@@ -34,15 +34,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(function(req, res, next) {
+  console.log("req.headers 1", req.headers )
   if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
-    jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'RESTFULAPIs', function(err, decode) {
+    jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'SECRET', function(err, decode) {
       if (err) req.user = undefined;
+      console.log("req.headers error", err )
       req.user = decode;
       next();
     });
   } else {
     req.user = undefined;
-    next();
+    next(); 
   }
 });
 var routes = require('./api/routes/appRoutes');

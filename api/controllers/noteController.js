@@ -32,7 +32,7 @@ exports.createNote = function(req, res) {
 
                 NoteBook.findOneAndUpdate(
                     {_id: notebook_id},
-                    {notes: note.notes + 1},
+                    {notes: parseInt(note.notes) + 1},
                     (err, res) => {}
                 )
                 
@@ -42,6 +42,7 @@ exports.createNote = function(req, res) {
                             message: err,
                         });
                     } else {
+                        console.log("Noote", note)
                         return res.status(200).json(note);
                     }
                 })
@@ -108,12 +109,13 @@ exports.getNotes = function(req, res) {
             notebook_id: notebook_id
         }, null, {sort: {created: sort === "asc" ? 1 : -1}}, function(err, resp) {
             if (err) {
-                console.log(err.message)
-
+                console.log("Error", err.message)
+                
                 return res.status(400).json({message: err.message})
             } else {
+                console.log("Response", resp)
 
-                let response = resp.filter(resp => resp.title.includes(search || "") || resp.description.includes(search || ""))
+                let response = resp.filter(result => result.title.includes(search || "") || result.content.includes(search || ""))
 
                 return res.status(200).json({ data:  response});
             }

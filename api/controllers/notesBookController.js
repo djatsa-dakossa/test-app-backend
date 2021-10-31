@@ -3,7 +3,8 @@ let { URL } = require('url');
 var mongoose = require('mongoose'),
   jwt = require('jsonwebtoken'),
   bcrypt = require('bcrypt'),
-  NoteBook = mongoose.model('NoteBookSchema');
+  NoteBook = mongoose.model('NoteBookSchema'),
+  Note = mongoose.model('NoteSchema');
 
 exports.createNoteBook = function(req, res) {
     // intercept the request to check if user is authentificated
@@ -24,23 +25,38 @@ exports.createNoteBook = function(req, res) {
 };
 
 exports.getNoteBook = function(req, res) {
+    const notebook_id = req.params.notebook_id
 
-    NoteBook.findOne({
-            _id: req.body.id,
+        NoteBook.findOne({
+            _id: notebook_id,
             created_by: req.user._id
         }, function(err, noteBook) {
-            if (err) throw err;
+            if (err){
+                console.log("error", err)
+            };
 
-            return res.status(200).json({ data: noteBook });
+            Note.find({
+                notebook_id: notebook_id,
+                created_by: req.user._id
+            }, (e, notes) => {
+                if(e) {
+
+                    return res.status(200).json({ data: noteBook });
+                } else {
+
+                    return res.status(200).json({ data: {detail: noteBook, all_notes: []} });
+                }
+            })
+
         }
     )
 };
 
 exports.deleteNotebook = function(req, res) {
-    const id = req.body.id
+    const notebook_id = req.params.notebook_id
 
     NoteBook.deleteOne({
-            _id: req.body.id,
+            _id: notebook_id,
             created_by: req.user._id
         }, function(err) {
             if (err) {
@@ -61,11 +77,14 @@ exports.getNotesbooks = function(req, res) {
     const id = req.body.id
     let searchParams = new URL("http://localhost:3000" + req.url).searchParams
     let search = searchParams.get('search')
-    let sort = searchParams.get('sort')
+    let sort = searchParams.get('sort') || "asc" 
 
     NoteBook.find({
             created_by: req.user._id,
-        }, {sort: {created: sort === "asc" ? 1 : -1}}, function(err, resp) {
+        }, 
+        null,
+        {sort: {created: -1}},
+         function(err, resp) {
             if (err) {
                 console.log(err.message)
 
@@ -83,7 +102,7 @@ exports.getNotesbooks = function(req, res) {
 exports.editNoteBook = function(req, res) {
     const notebook_id = req.params.notebook_id
 
-    Note.findOneAndUpdate(
+    NoteBook.findOneAndUpdate(
         {_id: notebook_id},
         {
             ...req.body,
