@@ -2,7 +2,7 @@
 
 var express = require('express'),
   app = express(),
-  port = process.env.PORT || 3003,
+  port = process.env.PORT || 8081,
   
   User = require('./api/models/userModel'),
   NoteBookSchema = require('./api/models/notesBookModels'),
@@ -21,8 +21,10 @@ const option = {
 // pass these options to mongo client connect request to avoid DeprecationWarning for current Server Discovery and Monitoring engine
 let mongoClientOptions = { useNewUrlParser: true, useUnifiedTopology: true };
 
+let localUrl = 'mongodb://127.0.0.1:27017/database';
+let dockerUrl = 'mongodb://admin:password@mongodb/database';
 
-mongoose.connect('mongodb://127.0.0.1:27017/database', mongoClientOptions).then(function(){
+mongoose.connect(localUrl, mongoClientOptions).then(function(){
     //connected successfully
     console.log("connecting scces")
 }, function(err) {

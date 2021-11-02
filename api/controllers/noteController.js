@@ -14,7 +14,6 @@ exports.createNote = function(req, res) {
             _id: notebook_id,
             created_by: req.user._id
         }, (err, note) => {
-            console.log("found ===>", note)
             if (err) {
                 return res.status(400).send({
                     message: err,
@@ -24,9 +23,9 @@ exports.createNote = function(req, res) {
             } else if(note) {
                 req.body.notebook_id = notebook_id
                 const data = {...req.body, created_by: req.user._id}
-                console.log('data === >', body)
                 let newNote = new Note(data);
-                    //   console.log('Url ===>', new URL("http://localhost:3000" + req.url))
+                
+                //   console.log('Url ===>', new URL("http://localhost:3000" + req.url))
                 
                 // Incremente the notes attribute in notebook object
 
@@ -42,7 +41,6 @@ exports.createNote = function(req, res) {
                             message: err,
                         });
                     } else {
-                        console.log("Noote", note)
                         return res.status(200).json(note);
                     }
                 })

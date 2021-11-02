@@ -17,7 +17,6 @@ exports.register = function(req, res) {
         email: req.body.email
       }, (er, resp) => {
         if(er){
-          console.log("eeerrr=>>", err.message)
           return res.status(400).send({
             message: err.message
           });
@@ -38,6 +37,7 @@ exports.sign_in = function(req, res) {
   User.findOne({
     email: req.body.email
   }, function(err, user) {
+    console.log("kflkdlfkldkfl")
     if (err) throw err;
     if (!user || !user.comparePassword(req.body.password)) {
       return res.status(401).json({ message: 'Authentication failed. Invalid user or password.' });
